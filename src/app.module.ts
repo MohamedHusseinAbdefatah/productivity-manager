@@ -1,20 +1,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',          // your database host
-      port: 5432,                 // default PostgreSQL port
-      username: 'postgres',   // replace with your postgres username
-      password: 'mohamed1252003', // replace with your postgres password
-      database: 'productivity-manager',   // replace with your postgres database name
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // this tells TypeORM where to find entities
-      synchronize: true,          // auto creates tables in DB, good for dev only
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'mohamed1252003',
+      database: process.env.DB_DATABASE || 'productivity-manager',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
-    TasksModule,                  // import your Tasks module here
+    TasksModule,
+    UsersModule,
+    AuthModule,
+    
   ],
   controllers: [],
   providers: [],
